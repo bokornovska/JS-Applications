@@ -7,7 +7,7 @@ const endpoint = {
     "getAllTeams": "data/teams",
     "getAllMembers": "data/members?where=status%3D%22member%22",
     "createTeam": "data/teams",
-    "teamsInfo": "data/teams",
+    "teamsInfo": "data/teams/id",
     "memberRequest": "data/members"
 }
 
