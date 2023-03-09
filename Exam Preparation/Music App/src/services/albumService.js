@@ -10,4 +10,9 @@ export const getOne = (albumId) => request.get(`${baseUrl}/${albumId}`);
 
 export const edit = (albumId, albumData) => request.put(`${baseUrl}/${albumId}`, albumData);
 
-export const remove = (albumId) => request.del(`${baseUrl}/${albumId}`)
+export const remove = (albumId) => request.del(`${baseUrl}/${albumId}`);
+
+export const search = (searchText) => {
+    let query = encodeURIComponent(`name LIKE "${searchText}"`)
+    return request.get(`${baseUrl}?where=${query}`);
+}

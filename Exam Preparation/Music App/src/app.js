@@ -22,9 +22,9 @@ page('/register', registerView);
 page('/logout', logoutView);
 page('/catalog', catalogView);
 page('/create', createView);
+page('/search', searchView)
 page('/albums/:albumId', detailsView);
 page('/albums/:albumId/edit', editView);
 page('/albums/:albumId/delete', deleteView);
-page('/search', searchView)
 
 page.start();

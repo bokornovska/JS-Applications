@@ -38,6 +38,10 @@ export const registerView = (ctx) => {
         const {email, password} = Object.fromEntries(formData);
         const confPass = formData.get('conf-pass');
 
+        if(email == '' || password == ''){
+            alert('invalid fields');
+            return;
+        }
         if(confPass != password){
             alert('Passwords don`t match');
 
