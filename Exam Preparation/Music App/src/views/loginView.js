@@ -1,5 +1,5 @@
 import { html, render } from '../../node_modules/lit-html/lit-html.js';
-import * as authService from '../services/authService.js';
+import * as userService from '../services/userService.js';
 const loginTemp = (submitHandler) => {
 
 return html`
@@ -30,7 +30,7 @@ export const loginView = (ctx) => {
         e.preventDefault();
 
         const {email, password} = Object.fromEntries(new FormData(e.currentTarget));
-        authService.login(email, password)
+        userService.login(email, password)
         .then(() => {
             ctx.page.redirect('/');
         })

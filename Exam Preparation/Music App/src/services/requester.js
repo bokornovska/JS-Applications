@@ -1,13 +1,20 @@
-
+import * as authServise from './authService.js';
 
 const request = (method, url, data) => {
     let options = {};
+    let token = authServise.getToken();
 
-    if(method !=='GET'){
+    if (method !== 'GET') {
         options.method = method;
         options.headers = {
-            'content-type': 'application/json'
+
+            'content-type': 'application/json',
+            
         };
+
+        if(token){
+            options.headers['X-Authorization'] = token;
+        }
 
         options.body = JSON.stringify(data);
     }

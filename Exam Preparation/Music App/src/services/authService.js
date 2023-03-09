@@ -1,34 +1,22 @@
-import * as request from './requester.js'
+export const getToken = () => {
+    return getUser()?.accessToken;
+}
 
-const baseUrl = 'http://localhost:3030/users';
+export const delUser = () => {
+    localStorage.removeItem('user')
+}
 
-const saveUser = (user) => {
+export const saveUser = (user) => {
     if (user.accessToken) {
-        localStorage.setItem('userData', JSON.stringify(user))
+        localStorage.setItem('user', JSON.stringify(user))
     }
 }
 
 export const getUser = () => {
-    let serializedUser = localStorage.getItem('userData');
+    let serializedUser = localStorage.getItem('user');
 
     if (serializedUser) {
         let user = JSON.parse(serializedUser);
         return user;
     }
-}
-
-export const login = (email, password) => {
-    return request.post(`${baseUrl}/login`, { email, password })
-        .then(user => {
-            saveUser(user);
-            return user;
-        });
-}
-
-export const register = (email, password) => {
-    return request.post(`${baseUrl}/register`, { email, password })
-        .then(user => {
-            saveUser(user);
-            return user;
-        });
 }
