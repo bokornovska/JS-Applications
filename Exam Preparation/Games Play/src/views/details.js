@@ -1,7 +1,9 @@
 import {html} from '../../node_modules/lit-html/lit-html.js';
 import * as gameServise from '../api/gamesService.js';
+import { comentFormView } from './commentForm.js';
+import { commentsView } from './comments.js';
 
-const detailsTemp = (game, onDelete) => {
+const detailsTemp = (game, commentsSection, comentFormSection, onDelete) => {
     return html`
             <section id="game-details">
             <h1>Game Details</h1>
@@ -19,20 +21,7 @@ const detailsTemp = (game, onDelete) => {
                 </p>
 
                 <!-- Bonus ( for Guests and Users ) -->
-                <div class="details-comments">
-                    <h2>Comments:</h2>
-                    <ul>
-                        <!-- list all comments for current game (If any) -->
-                        <li class="comment">
-                            <p>Content: I rate this one quite highly.</p>
-                        </li>
-                        <li class="comment">
-                            <p>Content: The best game.</p>
-                        </li>
-                    </ul>
-                    <!-- Display paragraph: If there are no games in the database -->
-                    <p class="no-comment">No comments.</p>
-                </div>
+               ${commentsSection}
 
                 <!-- Edit/Delete buttons ( Only for creator of this game )  -->
                 ${game.isOwner ? html`
@@ -46,13 +35,7 @@ const detailsTemp = (game, onDelete) => {
 
             <!-- Bonus -->
             <!-- Add Comment ( Only for logged-in users, which is not creators of the current game ) -->
-            <article class="create-comment">
-                <label>Add new comment:</label>
-                <form class="form">
-                    <textarea name="comment" placeholder="Comment......"></textarea>
-                    <input class="btn submit" type="submit" value="Add Comment">
-                </form>
-            </article>
+           ${comentFormSection}
 
         </section>
     `
@@ -60,12 +43,20 @@ const detailsTemp = (game, onDelete) => {
 
 export async function detailsView(ctx){
     const gameId = ctx.params.id;
-    const game = await gameServise.getById(gameId);
+    const [game, commentsSection] = await Promise.all([
+        gameServise.getById(gameId),
+        commentsView(gameId)
+    ]);
 
+    
+    
     if(ctx.user){
         game.isOwner = ctx.user._id == game._ownerId;
     }
-    ctx.render(detailsTemp(game, onDelete));
+    
+    const comentFormSection = comentFormView(ctx, game.isOwner)
+    
+    ctx.render(detailsTemp(game, commentsSection, comentFormSection, onDelete));
 
     async function onDelete(){
         const choise = confirm('Are you shure you want to delete this game?');
