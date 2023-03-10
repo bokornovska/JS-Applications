@@ -7,6 +7,7 @@ import { editView } from './views/edit.js';
 import { homeView } from './views/home.js';
 import { loginView } from './views/login.js';
 import { registerView } from './views/register.js';
+import { logout } from './api/userService.js'
 
 
 page(addRender);
@@ -19,5 +20,11 @@ page('/register', registerView);
 page('/create', createView);
 page('/details/:id', detailsView);
 page('/edit/:id', editView);
+page('/logout', onLogout)
 
 page.start();
+
+function onLogout(ctx) {
+    logout();
+    ctx.page.redirect('/')
+}

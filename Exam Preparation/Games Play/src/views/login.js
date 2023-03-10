@@ -1,9 +1,12 @@
 import {html} from '../../node_modules/lit-html/lit-html.js';
+import { createSubmitHandler } from '../api/utils.js';
+import * as userService from '../api/userService.js';
 
-const loginTemp = () => {
+
+const loginTemp = (onSubmit) => {
     return html`
      <section id="login-page" class="auth">
-            <form id="login">
+            <form @submit = ${onSubmit} id="login">
 
                 <div class="container">
                     <div class="brand-logo"></div>
@@ -15,7 +18,7 @@ const loginTemp = () => {
                     <input type="password" id="login-password" name="password">
                     <input type="submit" class="btn submit" value="Login">
                     <p class="field">
-                        <span>If you don't have profile click <a href="#">here</a></span>
+                        <span>If you don't have profile click <a href="/register">here</a></span>
                     </p>
                 </div>
             </form>
@@ -24,5 +27,14 @@ const loginTemp = () => {
 }
 
 export function loginView(ctx){
-    ctx.render(loginTemp())
+    ctx.render(loginTemp(createSubmitHandler(ctx, onSubmit)))
+}
+
+async function onSubmit(ctx, data, event){
+
+    await userService.login(data.email, data.password);
+
+    // event.target.reset();
+    ctx.page.redirect('/');
+
 }

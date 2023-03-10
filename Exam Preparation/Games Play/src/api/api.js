@@ -23,7 +23,7 @@ async function request(method, url, data) {
 
         const response = await fetch(host + url, options);
 
-        if (response.ok !== true) {
+        if (response.ok != true) {
             if (response.status == 403) {
                 clearUserData();
             }
@@ -39,7 +39,7 @@ async function request(method, url, data) {
 
     } catch (err) {
         alert(err.message);
-        throw err
+        throw err;
     }
 }
 

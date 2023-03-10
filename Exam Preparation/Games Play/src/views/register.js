@@ -1,9 +1,11 @@
 import {html} from '../../node_modules/lit-html/lit-html.js';
+import { createSubmitHandler } from '../api/utils.js';
+import * as userService from '../api/userService.js';
 
-const registerTemp = () => {
+const registerTemp = (onSubmit) => {
     return html`
     <section id="register-page" class="content auth">
-            <form id="register">
+            <form @submit = ${onSubmit} id="register">
                 <div class="container">
                     <div class="brand-logo"></div>
                     <h1>Register</h1>
@@ -20,7 +22,7 @@ const registerTemp = () => {
                     <input class="btn submit" type="submit" value="Register">
 
                     <p class="field">
-                        <span>If you already have profile click <a href="#">here</a></span>
+                        <span>If you already have profile click <a href="/login">here</a></span>
                     </p>
                 </div>
             </form>
@@ -30,5 +32,20 @@ const registerTemp = () => {
 }
 
 export function registerView(ctx){
-    ctx.render(registerTemp())
+    ctx.render(registerTemp(createSubmitHandler(ctx, onSubmit)))
+}
+
+async function onSubmit(ctx, data, event){
+    if(data.email == '' || data.password == ''){
+        return alert('All fields are required!')
+    }
+    if(data.password !== data['confirm-password']){
+        return alert('Password don`t match')
+    }
+
+    await userService.register(data.email, data.password);
+
+    event.target.reset();
+    ctx.page.redirect('/');
+
 }
