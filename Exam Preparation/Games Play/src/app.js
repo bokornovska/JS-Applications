@@ -8,8 +8,9 @@ import { homeView } from './views/home.js';
 import { loginView } from './views/login.js';
 import { registerView } from './views/register.js';
 import { logout } from './api/userService.js'
+import { addSession } from './middlewares/sessionMiddleware.js';
 
-
+page(addSession);
 page(addRender);
 
 

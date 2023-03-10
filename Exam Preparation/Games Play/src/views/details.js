@@ -1,23 +1,21 @@
 import {html} from '../../node_modules/lit-html/lit-html.js';
+import * as gameServise from '../api/gamesService.js';
 
-const detailsTemp = () => {
+const detailsTemp = (game) => {
     return html`
             <section id="game-details">
             <h1>Game Details</h1>
             <div class="info-section">
 
                 <div class="game-header">
-                    <img class="game-img" src="images/MineCraft.png" />
-                    <h1>Bright</h1>
-                    <span class="levels">MaxLevel: 4</span>
-                    <p class="type">Action, Crime, Fantasy</p>
+                    <img class="game-img" src=${game.imageUrl} />
+                    <h1>${game.title}</h1>
+                    <span class="levels">MaxLevel: ${game.maxLevel}</span>
+                    <p class="type">${game.category}</p>
                 </div>
 
                 <p class="text">
-                    Set in a world where fantasy creatures live side by side with humans. A human cop is forced to work
-                    with an Orc to find a weapon everyone is prepared to kill for. Set in a world where fantasy
-                    creatures live side by side with humans. A human cop is forced
-                    to work with an Orc to find a weapon everyone is prepared to kill for.
+                    ${game.summary}
                 </p>
 
                 <!-- Bonus ( for Guests and Users ) -->
@@ -37,10 +35,13 @@ const detailsTemp = () => {
                 </div>
 
                 <!-- Edit/Delete buttons ( Only for creator of this game )  -->
+                ${game.isOwner ? html`
                 <div class="buttons">
-                    <a href="#" class="button">Edit</a>
-                    <a href="#" class="button">Delete</a>
+                    <a href="/edit/${game._id}" class="button">Edit</a>
+                    <a href="javascript:void(0)" class="button">Delete</a>
                 </div>
+                `: ''}
+               
             </div>
 
             <!-- Bonus -->
@@ -57,6 +58,12 @@ const detailsTemp = () => {
     `
 }
 
-export function detailsView(ctx){
-    ctx.render(detailsTemp())
+export async function detailsView(ctx){
+    const gameId = ctx.params.id;
+    const game = await gameServise.getById(gameId);
+
+    if(ctx.user){
+        game.isOwner = ctx.user._id == game._ownerId;
+    }
+    ctx.render(detailsTemp(game))
 }
