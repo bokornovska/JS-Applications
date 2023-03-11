@@ -1,9 +1,11 @@
 import {html} from '../../node_modules/lit-html/lit-html.js';
+import {register} from '../api/user.js';
+import { createSubbmitHandler } from '../api/utils.js';
 
-const registerTemp = () => {
+const registerTemp = (onSubmit) => {
     return html`
     <section id="registerPage">
-            <form class="registerForm">
+            <form @submit = ${onSubmit} class="registerForm">
                 <img src="./images/logo.png" alt="logo" />
                 <h2>Register</h2>
                 <div class="on-dark">
@@ -32,5 +34,21 @@ const registerTemp = () => {
 };
 
 export const registerView = (ctx) => {
-    console.log('register page')
+    ctx.render(registerTemp(createSubbmitHandler(onSubmit)));
+
+    
+
+    async function onSubmit({email, password, repeatPassword}){
+
+        if(email == '' || password == ''){
+            return alert('All fields are required!')
+        };
+
+        if(password !== repeatPassword){
+            return alert('Password don`t match')
+        }
+
+        await register(email, password);
+        ctx.page.redirect('/');
+    }
 }

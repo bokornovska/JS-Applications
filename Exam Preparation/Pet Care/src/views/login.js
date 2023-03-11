@@ -1,9 +1,11 @@
 import {html} from '../../node_modules/lit-html/lit-html.js';
+import {login} from '../api/user.js'
+import { createSubbmitHandler } from '../api/utils.js';
 
-const loginTemp = () => {
+const loginTemp = (onSubmit) => {
     return html`
     <section id="loginPage">
-            <form class="loginForm">
+            <form @submit = ${onSubmit} class="loginForm">
                 <img src="./images/logo.png" alt="logo" />
                 <h2>Login</h2>
 
@@ -20,7 +22,7 @@ const loginTemp = () => {
                 <button class="btn" type="submit">Login</button>
 
                 <p class="field">
-                    <span>If you don't have profile click <a href="#">here</a></span>
+                    <span>If you don't have profile click <a href="/register">here</a></span>
                 </p>
             </form>
         </section>
@@ -28,5 +30,16 @@ const loginTemp = () => {
 };
 
 export const loginView = (ctx) => {
-    console.log("loginView")
+
+    ctx.render(loginTemp(createSubbmitHandler(onSubmit)));
+
+    async function onSubmit({email, password}){
+
+        if(email == '' || password == ''){
+            return alert('All fields are required!')
+        };
+
+        await login(email, password);
+        ctx.page.redirect('/')
+    }
 }

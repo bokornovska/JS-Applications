@@ -14,5 +14,5 @@ const homeTemp = () => html`
 `;
 
 export const homeView = (ctx) => {
-    console.log('home page')
+    ctx.render(homeTemp());
 }
