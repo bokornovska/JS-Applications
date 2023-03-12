@@ -1,10 +1,12 @@
 import {html} from '../../node_modules/lit-html/lit-html.js';
+import { createPet } from '../api/data.js';
+import { createSubbmitHandler } from '../api/utils.js';
 
 
-const createTemp = () => {
+const createTemp = onSubmit => {
     return html`
      <section id="createPage">
-            <form class="createForm">
+            <form @submit = ${onSubmit} class="createForm">
                 <img src="./images/cat-create.jpg">
                 <div>
                     <h2>Create PetPal</h2>
@@ -36,5 +38,22 @@ const createTemp = () => {
 }
 
 export const createView = (ctx) => {
-    console.log('create page')
+    ctx.render(createTemp(createSubbmitHandler(onSubmit)));
+
+    async function onSubmit({name, breed, age, weight, image}){
+
+        if(name == '' || breed == '' || age == '' || weight == '' || image == ''){
+            return alert('All fields required!')
+        }
+
+        await createPet({
+            name, 
+            breed, 
+            age, 
+            weight, 
+            image
+        });
+
+        ctx.page.redirect('/');
+    }
 }

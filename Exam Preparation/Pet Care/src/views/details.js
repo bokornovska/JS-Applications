@@ -1,8 +1,8 @@
 import { html } from '../../node_modules/lit-html/lit-html.js';
-import { getById } from '../api/data.js';
+import { deleteById, getById } from '../api/data.js';
 
 
-const detailsTemp = (pet, hasUser, isOwner) => html`
+const detailsTemp = (pet, hasUser, isOwner, onDelete) => html`
 <section id="detailsPage">
     <div class="details">
         <div class="animalPic">
@@ -21,7 +21,7 @@ const detailsTemp = (pet, hasUser, isOwner) => html`
             <div class="actionBtn">
                 ${isOwner ? html`
                 <a href="/edit/${pet._id}" class="edit">Edit</a>
-                <a href="javascript:void(0)" class="remove">Delete</a>
+                <a @click=${onDelete} href="javascript:void(0)" class="remove">Delete</a>
                 `
                 : html`<a href="#" class="donate">Donate</a>`}
                
@@ -38,10 +38,21 @@ export async function detailsView(ctx) {
 
     const id = ctx.params.id;
     
+
     const pet = await getById(id);
-    console.log(pet)
+    // console.log(pet)
     const hasUser = Boolean(ctx.user);
     const isOwner = hasUser && ctx.user._id == pet._ownerId;
 
-    ctx.render(detailsTemp(pet, hasUser, isOwner))
+    ctx.render(detailsTemp(pet, hasUser, isOwner, onDelete));
+
+    async function onDelete(){
+        const choise = confirm('Are you sure you want to delete this pet?');
+        // console.log(choise)
+
+        if(choise == true){
+            await deleteById(id);
+            ctx.page.redirect('/');
+        }
+    }
 }
