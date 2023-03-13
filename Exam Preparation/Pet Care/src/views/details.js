@@ -1,8 +1,9 @@
 import { html } from '../../node_modules/lit-html/lit-html.js';
 import { deleteById, getById } from '../api/data.js';
+import { donate, getDonations, getOwnDonation } from '../api/donations.js';
 
 
-const detailsTemp = (pet, hasUser, isOwner, onDelete) => html`
+const detailsTemp = (pet, donations, hasUser, canDonate, isOwner, onDelete, onDonate) => html`
 <section id="detailsPage">
     <div class="details">
         <div class="animalPic">
@@ -14,45 +15,74 @@ const detailsTemp = (pet, hasUser, isOwner, onDelete) => html`
                 <h3>Breed: ${pet.breed}</h3>
                 <h4>Age: ${pet.age}</h4>
                 <h4>Weight: ${pet.weight}</h4>
-                <h4 class="donation">Donation: 0$</h4>
+                <h4 class="donation">Donation: ${donations}$</h4>
             </div>
 
-            ${hasUser ? html`
-            <div class="actionBtn">
-                ${isOwner ? html`
-                <a href="/edit/${pet._id}" class="edit">Edit</a>
-                <a @click=${onDelete} href="javascript:void(0)" class="remove">Delete</a>
-                `
-                : html`<a href="#" class="donate">Donate</a>`}
-               
-            </div>
-                `
-            : ''}
+            ${petControls(pet, hasUser, canDonate, isOwner, onDelete, onDonate)}
 
 
         </div>
     </div>
 </section>`
 
+function petControls(pet, hasUser, canDonate, isOwner, onDelete, onDonate) {
+    if (hasUser == false) {
+        return '';
+    }
+    if (canDonate) {
+        return html`
+        <div class="actionBtn">
+            <a @click = ${onDonate} href="javascript:void(0)" class="donate">Donate</a>
+        
+        </div>
+        `
+    }
+    if(isOwner){
+        return html`
+        <div class="actionBtn">
+                
+                <a href="/edit/${pet._id}" class="edit">Edit</a>
+                <a @click=${onDelete} href="javascript:void(0)" class="remove">Delete</a>
+        
+        </div>
+        `
+    }
+}
 export async function detailsView(ctx) {
 
     const id = ctx.params.id;
-    
-
-    const pet = await getById(id);
-    // console.log(pet)
     const hasUser = Boolean(ctx.user);
+    
+    const requests = [
+        getById(id),
+        getDonations(id)
+    ];
+
+    if(hasUser){
+        requests.push(getOwnDonation(id, ctx.user._id))
+    }
+    
+    const [pet, donations, hasDonation] = await Promise.all(requests);
+    // console.log(pet)
+
     const isOwner = hasUser && ctx.user._id == pet._ownerId;
 
-    ctx.render(detailsTemp(pet, hasUser, isOwner, onDelete));
+    const canDonate = !isOwner && hasDonation == 0;
 
-    async function onDelete(){
+    ctx.render(detailsTemp(pet, donations*100, hasUser, canDonate, isOwner, onDelete, onDonate));
+
+    async function onDelete() {
         const choise = confirm('Are you sure you want to delete this pet?');
         // console.log(choise)
 
-        if(choise == true){
+        if (choise == true) {
             await deleteById(id);
             ctx.page.redirect('/');
         }
+    }
+
+    async function onDonate(){
+        await donate(id);
+        ctx.page.redirect('/details/' + id)
     }
 }
