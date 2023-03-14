@@ -50,17 +50,12 @@ export async function get (url) {
 export async function post (url, data) {
     return request(url, 'post', data);
 }
-export async function put (url, data) {
+export async function put (url) {
     return request(url, 'put', data);;
 }
 export async function del (url) {
     return request(url, 'delete');
 }
-
-// export const get = request.bind(null, 'GET');
-// export const put = request.bind(null, 'PUT');
-// export const post = request.bind(null, 'POST');
-// export const del = request.bind(null, 'DELETE');
 
 
 

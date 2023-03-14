@@ -12,7 +12,7 @@ const navTemp = (user) => {
                 <div class="profile">
                     <span>Welcome, ${user.email}</span>
                     <a href="/profile">My Profile</a>
-                    <a @click=${onLogout} href="javascript:void(0)">Logout</a>
+                    <a id="logoutBtn" @click=${onLogout} href="javascript:void(0)">Logout</a>
                 </div>
             </div>
             `

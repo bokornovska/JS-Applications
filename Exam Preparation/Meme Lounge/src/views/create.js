@@ -36,6 +36,7 @@ export function createView(ctx) {
             imageUrl, 
         });
 
+        
         ctx.page.redirect('/catalog');
     }
 }

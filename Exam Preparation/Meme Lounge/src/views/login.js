@@ -26,7 +26,7 @@ export function loginView(ctx) {
     ctx.render(loginTemp(createSubbmitHandler(onSubmit)));
 
      async function onSubmit({email, password}){
-
+        
         if(email == '' || password == ''){
             return alert('All fields are required!')
         };

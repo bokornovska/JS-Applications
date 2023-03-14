@@ -38,11 +38,15 @@ const registerTemp = (onSubmit) => {
 export function registerView(ctx) {
     ctx.render(registerTemp(createSubbmitHandler(onSubmit)));
 
-    async function onSubmit({username, email, password, genre}){
+    async function onSubmit({username, email, password, genre, repeatPass}){
 
-        if(email == '' || password == '' || username == ''){
+        if(username == '' || email == '' || password == '' || repeatPass == ''){
             return alert('All fields are required!')
         };
+
+        if(password !== repeatPass){
+            return alert('password don`t match')
+        }
 
         await register(username, email, password, genre);
         ctx.page.redirect('/catalog')

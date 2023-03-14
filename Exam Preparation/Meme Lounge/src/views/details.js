@@ -29,12 +29,12 @@ const detailsTemp = (meme, isCreator, onDelete) => html`
 
 export async function detailsView(ctx) {
 
-    const id = ctx.params.id;
+    const id = ctx.params.id
     const meme = await getById(id);
-    
-    const hasUser = Boolean(sessionStorage.getItem('userData'));
-    const isCreator = hasUser && getUserData(id)._id == meme._ownerId;
-    // console.log(getUserData(id)._id)
+    // console.log(meme);
+
+    const userData = getUserData();
+    const isCreator = userData?.id == meme._ownerId;
     
 
     ctx.render(detailsTemp(meme,isCreator,onDelete));
