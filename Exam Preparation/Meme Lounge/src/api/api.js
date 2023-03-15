@@ -39,6 +39,7 @@ async function request(url, method, data) {
         }
     } catch (err) {
         alert(err.message);
+        // notify(err.message);
         throw err;
     }
 

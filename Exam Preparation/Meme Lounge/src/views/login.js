@@ -1,6 +1,7 @@
 import {html} from '../../node_modules/lit-html/lit-html.js';
 import { createSubbmitHandler } from '../api/utils.js';
 import {login} from '../api/user.js';
+import { notify } from '../api/notify.js';
 
 const loginTemp = (onSubmit) => {
     return html`
@@ -28,7 +29,7 @@ export function loginView(ctx) {
      async function onSubmit({email, password}){
         
         if(email == '' || password == ''){
-            return alert('All fields are required!')
+            return notify('All fields are required!')
         };
 
         await login(email, password);
