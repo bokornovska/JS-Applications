@@ -12,7 +12,7 @@ const navTemp = (user) => {
             ? html`
              <div class="user">
             <a href="create">Add Pair</a>
-            <a href="#">Logout</a>
+            <a @click=${onLogout} href="javascript:void(0)">Logout</a>
           </div>
             `
             : html`
