@@ -7,22 +7,23 @@ export async function getAll() {
 };
 
 export async function getById (id){
-    return get('/data/shoes/' + id);
+    return get(`/data/shoes/${id}`);
 }
 
 export async function deleteById(id){
     return del('/data/shoes/' + id);
 }
 
-// export async function createPost(postData){
-//     return post('/data/posts', postData)
-// }
+export async function createShoe(shoeData){
+    return post('/data/shoes', shoeData)
+}
 
 
-// export async function editPost(id, postData){
-//     return put('/data/posts/' + id, postData)
-// }
+export async function editShoe(id, shoe){
+    return put(`/data/shoes/${id}`, shoe)
+}
 
-// export async function getMyPosts(userId){
-//     return get(`/data/posts?where=_ownerId%3D%22${userId}%22&sortBy=_createdOn%20desc`)
-// }
+export const search = (searchText) => {
+    let query = encodeURIComponent(`brand LIKE "${searchText}"`)  
+    return get(`/data/shoes?where=${query}`);
+}

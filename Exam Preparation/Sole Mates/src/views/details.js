@@ -21,8 +21,8 @@ const detailsTemp = (shoe, isCreator, onDelete) => html`
         </div>
         ${isCreator ? html`
         <div id="action-buttons">
-            <a href="" id="edit-btn">Edit</a>
-            <a @click=${onDelete} href="" id="delete-btn">Delete</a>
+            <a href="/correct/${shoe._id}" id="edit-btn">Edit</a>
+            <a @click=${onDelete} href="javascript:void(0)" id="delete-btn">Delete</a>
         </div>
         `: ''}
 
@@ -34,9 +34,9 @@ const detailsTemp = (shoe, isCreator, onDelete) => html`
 `
 export async function detailsView(ctx) {
 
-    const id = ctx.params.id
+    const id = ctx.params.id;
     const shoe = await getById(id);
-    // console.log(shoe);
+    // console.log(id);
 
     const userData = getUserData();
     const isCreator = userData?.id == shoe._ownerId;
